@@ -82,7 +82,8 @@ class Event(models.Model):
 class EventSession(models.Model):
     show_time = models.DateTimeField()
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
-    section = models.ForeignKey(SportArena, on_delete=models.CASCADE)
+    section = models.ManyToManyField(Section, related_name="sections")
+    # section = models.ForeignKey(SportArena, on_delete=models.CASCADE)
 
     class Meta:
         ordering = ["-show_time"]
