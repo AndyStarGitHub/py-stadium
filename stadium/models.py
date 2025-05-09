@@ -13,6 +13,9 @@ class SportArena(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        verbose_name_plural = 'sportarenas'
+
 
 class Section(models.Model):
     name = models.CharField(max_length=255)
@@ -26,6 +29,9 @@ class Section(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        verbose_name_plural = 'sections'
+
 
 class Genre(models.Model):
     name = models.CharField(max_length=255, unique=True)
@@ -33,6 +39,9 @@ class Genre(models.Model):
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        verbose_name_plural = 'genres'
 
 
 class Actor(models.Model):
@@ -46,6 +55,9 @@ class Actor(models.Model):
     def full_name(self):
         return f"{self.first_name} {self.last_name}"
 
+    class Meta:
+        verbose_name_plural = 'actors'
+
 
 class Team(models.Model):
     name = models.CharField(max_length=255)
@@ -53,12 +65,15 @@ class Team(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        verbose_name_plural = 'teams'
+
 
 def event_image_file_path(instance, filename):
     _, extension = os.path.splitext(filename)
     filename = f"{slugify(instance.title)}-{uuid.uuid4()}{extension}"
 
-    return os.path.join("uploads/movies/", filename)
+    return os.path.join("uploads/events/", filename)
 
 
 class Event(models.Model):
@@ -72,6 +87,7 @@ class Event(models.Model):
 
     class Meta:
         ordering = ["title"]
+        verbose_name_plural = "events"
 
     def __str__(self):
         return self.title
@@ -80,11 +96,11 @@ class Event(models.Model):
 class EventSession(models.Model):
     show_time = models.DateTimeField()
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
-    section = models.ManyToManyField(Section, related_name="sections")
-    # section = models.ForeignKey(SportArena, on_delete=models.CASCADE)
+    sections = models.ManyToManyField(Section, related_name="sections")
 
     class Meta:
         ordering = ["-show_time"]
+        verbose_name_plural = "eventsessions"
 
     def __str__(self):
         return self.event.title + " " + str(self.show_time)
@@ -93,7 +109,9 @@ class EventSession(models.Model):
 class Order(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="orders",
     )
 
     def __str__(self):
@@ -101,6 +119,7 @@ class Order(models.Model):
 
     class Meta:
         ordering = ["-created_at"]
+        verbose_name_plural = "orders"
 
 class Ticket(models.Model):
     event_session = models.ForeignKey(
@@ -135,7 +154,7 @@ class Ticket(models.Model):
             self.section,
             self.row,
             self.seat,
-            self.event_session.cinema_hall,
+            self.event_session.sportarena,
             ValidationError,
         )
 
@@ -159,3 +178,4 @@ class Ticket(models.Model):
     class Meta:
         unique_together = ("event_session", "section", "row", "seat")
         ordering = ["section", "row", "seat"]
+        verbose_name_plural = "tickets"
