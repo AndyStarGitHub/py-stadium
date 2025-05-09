@@ -11,6 +11,7 @@ from .models import (
     EventSession,
     Order,
     Ticket,
+    Team,
 )
 
 admin.site.register(SportArena)
@@ -20,5 +21,6 @@ admin.site.register(Section)
 admin.site.register(Event)
 admin.site.register(EventSession)
 admin.site.register(Order)
+admin.site.register(Team)
 admin.site.register(Ticket)
 

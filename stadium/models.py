@@ -5,8 +5,7 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.text import slugify
 
-from config import settings
-
+from django.conf import settings
 
 class SportArena(models.Model):
     name = models.CharField(max_length=255)
@@ -19,7 +18,6 @@ class Section(models.Model):
     name = models.CharField(max_length=255)
     rows = models.IntegerField()
     seats_in_row = models.IntegerField()
-    # allowed_for_visitors = models.BooleanField()
 
     @property
     def capacity(self) -> int:
@@ -68,8 +66,8 @@ class Event(models.Model):
     description = models.TextField()
     duration = models.IntegerField()
     genres = models.ManyToManyField(Genre, related_name="event_genres")
-    actors = models.ManyToManyField(Actor, related_name="event_actors")
-    teams = models.ManyToManyField(Genre, related_name="event_teams")
+    actors = models.ManyToManyField(Actor, blank=True, related_name="event_actors")
+    teams = models.ManyToManyField(Team, blank=True, related_name="event_teams")
     image = models.ImageField(null=True, upload_to=event_image_file_path)
 
     class Meta:
