@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from stadium.models import Genre, SportArena
+from stadium.models import Genre, SportArena, Section
 
 
 class GenreSerializer(serializers.ModelSerializer):
@@ -9,15 +9,10 @@ class GenreSerializer(serializers.ModelSerializer):
         fields = ("id", "name", "is_sports")
 
 
-class GenreDetailSerializer(serializers.ModelSerializer):
-
+class SectionSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Genre
-        fields = (
-            "id",
-            "name",
-            "is_sports",
-        )
+        model = Section
+        fields = ("id", "name", "rows", "seats_in_row")
 
 
 class SportArenaSerializer(serializers.ModelSerializer):

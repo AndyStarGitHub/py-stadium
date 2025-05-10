@@ -3,9 +3,9 @@ from rest_framework import mixins
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.viewsets import GenericViewSet
 
-from stadium.models import Genre, SportArena
+from stadium.models import Genre, SportArena, Section
 from stadium.permissions import IsAdminOrIfAuthenticatedReadOnly
-from stadium.serializers import GenreSerializer, SportArenaSerializer
+from stadium.serializers import GenreSerializer, SportArenaSerializer, SectionSerializer
 
 
 class GenreViewSet(
@@ -19,6 +19,19 @@ class GenreViewSet(
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
     # authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
+
+
+class SectionViewSet(
+    mixins.CreateModelMixin,
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+    mixins.UpdateModelMixin,
+    mixins.DestroyModelMixin,
+    GenericViewSet,
+):
+    queryset = Section.objects.all()
+    serializer_class = SectionSerializer
     permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
 
 

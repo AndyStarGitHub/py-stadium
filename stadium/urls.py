@@ -1,10 +1,15 @@
 from django.urls import path, include
 from rest_framework import routers
 
-from stadium.views import GenreViewSet, SportArenaViewSet
+from stadium.views import (
+    GenreViewSet,
+    SportArenaViewSet,
+    SectionViewSet
+)
 
 router = routers.DefaultRouter()
 router.register("genres", GenreViewSet)
+router.register("sections", SectionViewSet)
 router.register("sport_arenas", SportArenaViewSet)
 # router.register("actors", ActorViewSet)
 # router.register("cinema_halls", CinemaHallViewSet)
