@@ -1,11 +1,21 @@
-from django.shortcuts import render
 from rest_framework import mixins
-from rest_framework.authentication import TokenAuthentication
 from rest_framework.viewsets import GenericViewSet
 
-from stadium.models import Genre, SportArena, Section, Actor
+from stadium.models import (
+    Actor,
+    Genre,
+    Section,
+    SportArena,
+    Team,
+)
 from stadium.permissions import IsAdminOrIfAuthenticatedReadOnly
-from stadium.serializers import GenreSerializer, SportArenaSerializer, SectionSerializer, ActorSerializer
+from stadium.serializers import (
+    ActorSerializer,
+    GenreSerializer,
+    SectionSerializer,
+    SportArenaSerializer,
+    TeamSerializer,
+)
 
 
 class ActorViewSet(
@@ -57,4 +67,17 @@ class SportArenaViewSet(
 ):
     queryset = SportArena.objects.all()
     serializer_class = SportArenaSerializer
+    permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
+
+
+class TeamViewSet(
+    mixins.CreateModelMixin,
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+    mixins.UpdateModelMixin,
+    mixins.DestroyModelMixin,
+    GenericViewSet,
+):
+    queryset = Team.objects.all()
+    serializer_class = TeamSerializer
     permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
