@@ -23,6 +23,7 @@ class EventSerializer(serializers.ModelSerializer):
             "actors",
             "teams",
             "image",
+            "sportarena",
         )
 
 

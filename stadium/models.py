@@ -80,6 +80,7 @@ class Event(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField()
     duration = models.IntegerField()
+    sportarena = models.ForeignKey(SportArena, on_delete=models.CASCADE)
     genres = models.ManyToManyField(Genre, related_name="event_genres")
     actors = models.ManyToManyField(Actor, blank=True, related_name="event_actors")
     teams = models.ManyToManyField(Team, blank=True, related_name="event_teams")
