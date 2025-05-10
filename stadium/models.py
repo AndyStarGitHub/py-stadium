@@ -95,7 +95,7 @@ class Event(models.Model):
 
 class EventSession(models.Model):
     show_time = models.DateTimeField()
-    event = models.ForeignKey(Event, on_delete=models.CASCADE)
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name="event")
     sections = models.ManyToManyField(Section, related_name="sections")
 
     class Meta:

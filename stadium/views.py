@@ -4,6 +4,7 @@ from rest_framework.viewsets import GenericViewSet
 from stadium.models import (
     Actor,
     Event,
+    EventSession,
     Genre,
     Section,
     SportArena,
@@ -13,6 +14,7 @@ from stadium.permissions import IsAdminOrIfAuthenticatedReadOnly
 from stadium.serializers import (
     ActorSerializer,
     EventSerializer,
+    EventSessionSerializer,
     GenreSerializer,
     SectionSerializer,
     SportArenaSerializer,
@@ -43,6 +45,19 @@ class EventViewSet(
 ):
     queryset = Event.objects.all()
     serializer_class = EventSerializer
+    permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
+
+
+class EventSessionViewSet(
+    mixins.CreateModelMixin,
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+    mixins.UpdateModelMixin,
+    mixins.DestroyModelMixin,
+    GenericViewSet,
+):
+    queryset = EventSession.objects.all()
+    serializer_class = EventSessionSerializer
     permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
 
 
