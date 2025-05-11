@@ -43,6 +43,12 @@ class EventViewSet(viewsets.ModelViewSet):
     queryset = Event.objects.all()
     permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
 
+    def get_queryset(self):
+        queryset = self.queryset
+        if self.action == "list":
+            return queryset.prefetch_related()
+        return queryset
+
     def get_serializer_class(self):
         if self.action == "list":
             return EventListSerializer
@@ -76,7 +82,14 @@ class EventViewSet(viewsets.ModelViewSet):
 #     permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
 
 class EventSessionViewSet(viewsets.ModelViewSet):
+    permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
     queryset = EventSession.objects.all()
+
+    def get_queryset(self):
+        queryset = self.queryset
+        if self.action == "list":
+            return queryset.prefetch_related()
+        return queryset
 
     def get_serializer_class(self):
         if self.action == "list":
