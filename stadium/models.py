@@ -176,7 +176,7 @@ class Ticket(models.Model):
 
     def __str__(self):
         return (
-            f"{str(self.event_session)} (section: {self: section}, row: {self.row}, seat: {self.seat})"
+            f"{str(self.event_session)} (section: {self.section.name}, row: {self.row}, seat: {self.seat})"
         )
 
     class Meta:
