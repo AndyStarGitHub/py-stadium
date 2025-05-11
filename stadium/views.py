@@ -1,4 +1,5 @@
-from rest_framework import mixins
+from rest_framework import mixins, viewsets
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.viewsets import GenericViewSet
 
 from stadium.models import (
@@ -6,6 +7,7 @@ from stadium.models import (
     Event,
     EventSession,
     Genre,
+    Order,
     Section,
     SportArena,
     Team,
@@ -16,6 +18,8 @@ from stadium.serializers import (
     EventSerializer,
     EventSessionSerializer,
     GenreSerializer,
+    OrderSerializer,
+    OrderListSerializer,
     SectionSerializer,
     SportArenaSerializer,
     TeamSerializer,
@@ -111,3 +115,30 @@ class TeamViewSet(
     queryset = Team.objects.all()
     serializer_class = TeamSerializer
     permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
+
+
+
+class OrderSetPagination(PageNumberPagination):
+    page_size = 3
+    page_size_query_param = 'page_size'
+    max_page_size = 20
+
+
+class OrderViewSet(viewsets.ModelViewSet):
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
+    pagination_class = OrderSetPagination
+    def get_queryset(self):
+        queryset = self.queryset.filter(user=self.request.user)
+        if self.action == "list":
+            queryset = queryset.prefetch_related("ticket_orders")
+        return queryset
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+    def get_serializer_class(self):
+        serializer = self.serializer_class
+        if self.action == 'list':
+            serializer = OrderListSerializer
+        return serializer

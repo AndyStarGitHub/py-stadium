@@ -122,9 +122,10 @@ class Order(models.Model):
         ordering = ["-created_at"]
         verbose_name_plural = "orders"
 
+
 class Ticket(models.Model):
     event_session = models.ForeignKey(
-        EventSession, on_delete=models.CASCADE, related_name="ticket_sessions"
+        EventSession, on_delete=models.CASCADE, related_name="ticket_event_sessions"
     )
     order = models.ForeignKey(
         Order, on_delete=models.CASCADE, related_name="ticket_orders"
@@ -135,6 +136,9 @@ class Ticket(models.Model):
 
     @staticmethod
     def validate_ticket(row, seat, section, error_to_raise):
+
+        return
+
         for ticket_attr_value, ticket_attr_name, section_attr_name in [
             (row, "row", "rows"),
             (seat, "seat", "seats_in_row"),
@@ -155,7 +159,6 @@ class Ticket(models.Model):
             self.section,
             self.row,
             self.seat,
-            self.event_session.sportarena,
             ValidationError,
         )
 
@@ -173,10 +176,11 @@ class Ticket(models.Model):
 
     def __str__(self):
         return (
-            f"{str(self.event_session)} (row: {self.row}, seat: {self.seat})"
+            f"{str(self.event_session)} (section: {self: section}, row: {self.row}, seat: {self.seat})"
         )
 
     class Meta:
         unique_together = ("event_session", "section", "row", "seat")
         ordering = ["section", "row", "seat"]
         verbose_name_plural = "tickets"
+

@@ -6,6 +6,7 @@ from stadium.views import (
     EventViewSet,
     EventSessionViewSet,
     GenreViewSet,
+    OrderViewSet,
     SectionViewSet,
     SportArenaViewSet,
     TeamViewSet,
@@ -19,11 +20,7 @@ router.register("genres", GenreViewSet)
 router.register("sections", SectionViewSet)
 router.register("sport_arenas", SportArenaViewSet)
 router.register("teams", TeamViewSet)
-
-# router.register("cinema_halls", CinemaHallViewSet)
-# router.register("movies", MovieViewSet)
-# router.register("movie_sessions", MovieSessionViewSet)
-# router.register("orders", OrderViewSet)
+router.register("orders", OrderViewSet)
 
 urlpatterns = [path("", include(router.urls))]
 
