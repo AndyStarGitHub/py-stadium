@@ -35,6 +35,25 @@ class GenreSerializer(serializers.ModelSerializer):
         fields = ("id", "name", "is_sports")
 
 
+class EventListSerializer(serializers.ModelSerializer):
+    genres = GenreSerializer(many=True, read_only=True)
+
+
+    class Meta:
+        model = Event
+        fields = (
+            "id",
+            "title",
+            "description",
+            "duration",
+            "genres",
+            "actors",
+            "teams",
+            "image",
+            "sportarena",
+        )
+
+
 class TeamSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -49,6 +68,7 @@ class EventSessionSerializer(serializers.ModelSerializer):
     actors = ActorSerializer(many=True, read_only=True)
     genres = GenreSerializer(many=True, read_only=True)
     teams = TeamSerializer(many=True, read_only=True)
+    # event = EventSerializer()
 
     class Meta:
         model = EventSession
@@ -67,6 +87,7 @@ class EventSessionSerializer(serializers.ModelSerializer):
 
 
 class EventSessionListSerializer(EventSessionSerializer):
+    event = EventSerializer()
     event_title = serializers.CharField(source="event.title", read_only=True)
     event_image = serializers.ImageField(source="event.image", read_only=True)
     section_name = serializers.CharField(
@@ -81,9 +102,10 @@ class EventSessionListSerializer(EventSessionSerializer):
         model = EventSession
         fields = (
             "id",
+            "event",
             "show_time",
-            "event_title",
-            "event_image",
+            # "event_title",
+            # "event_image",
             "section_name",
             "section_capacity",
             "tickets_available",

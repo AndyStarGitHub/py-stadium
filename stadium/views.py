@@ -22,7 +22,7 @@ from stadium.serializers import (
     OrderListSerializer,
     SectionSerializer,
     SportArenaSerializer,
-    TeamSerializer,
+    TeamSerializer, EventSessionListSerializer, EventListSerializer,
 )
 
 
@@ -39,30 +39,51 @@ class ActorViewSet(
     permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
 
 
-class EventViewSet(
-    mixins.CreateModelMixin,
-    mixins.ListModelMixin,
-    mixins.RetrieveModelMixin,
-    mixins.UpdateModelMixin,
-    mixins.DestroyModelMixin,
-    GenericViewSet,
-):
+class EventViewSet(viewsets.ModelViewSet):
     queryset = Event.objects.all()
-    serializer_class = EventSerializer
     permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
 
+    def get_serializer_class(self):
+        if self.action == "list":
+            return EventListSerializer
 
-class EventSessionViewSet(
-    mixins.CreateModelMixin,
-    mixins.ListModelMixin,
-    mixins.RetrieveModelMixin,
-    mixins.UpdateModelMixin,
-    mixins.DestroyModelMixin,
-    GenericViewSet,
-):
+        return EventSerializer
+
+
+# class EventViewSet(
+#     mixins.CreateModelMixin,
+#     mixins.ListModelMixin,
+#     mixins.RetrieveModelMixin,
+#     mixins.UpdateModelMixin,
+#     mixins.DestroyModelMixin,
+#     GenericViewSet,
+# ):
+#     queryset = Event.objects.all()
+#     serializer_class = EventSerializer
+#     permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
+
+
+# class EventSessionViewSet(
+#     mixins.CreateModelMixin,
+#     mixins.ListModelMixin,
+#     mixins.RetrieveModelMixin,
+#     mixins.UpdateModelMixin,
+#     mixins.DestroyModelMixin,
+#     GenericViewSet,
+# ):
+#     queryset = EventSession.objects.all()
+#     serializer_class = EventSessionSerializer
+#     permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
+
+class EventSessionViewSet(viewsets.ModelViewSet):
     queryset = EventSession.objects.all()
-    serializer_class = EventSessionSerializer
-    permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
+
+    def get_serializer_class(self):
+        if self.action == "list":
+            return EventSessionListSerializer
+
+        return EventSessionSerializer
+
 
 
 class GenreViewSet(
