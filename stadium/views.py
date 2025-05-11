@@ -22,7 +22,8 @@ from stadium.serializers import (
     OrderListSerializer,
     SectionSerializer,
     SportArenaSerializer,
-    TeamSerializer, EventSessionListSerializer, EventListSerializer,
+    TeamSerializer, EventSessionListSerializer, EventListSerializer, EventRetrieveSerializer,
+    EventSessionRetrieveSerializer,
 )
 
 
@@ -46,13 +47,14 @@ class EventViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = self.queryset
         if self.action == "list":
-            return queryset.prefetch_related()
+            return queryset.prefetch_related("genres")
         return queryset
 
     def get_serializer_class(self):
         if self.action == "list":
             return EventListSerializer
-
+        elif self.action == "retrieve":
+            return EventRetrieveSerializer
         return EventSerializer
 
 
@@ -88,12 +90,14 @@ class EventSessionViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = self.queryset
         if self.action == "list":
-            return queryset.prefetch_related()
+            return queryset.prefetch_related("event")
         return queryset
 
     def get_serializer_class(self):
         if self.action == "list":
             return EventSessionListSerializer
+        if self.action == "retrieve":
+            return EventSessionRetrieveSerializer
 
         return EventSessionSerializer
 
