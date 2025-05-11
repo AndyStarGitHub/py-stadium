@@ -25,7 +25,7 @@ class EventSerializer(serializers.ModelSerializer):
             "actors",
             "teams",
             "image",
-            "sportarena",
+            # "sportarena",
         )
 
 
@@ -50,7 +50,7 @@ class EventListSerializer(serializers.ModelSerializer):
             "actors",
             "teams",
             "image",
-            "sportarena",
+            # "sportarena",
         )
 
 
@@ -61,6 +61,13 @@ class TeamSerializer(serializers.ModelSerializer):
         fields = ("id", "name")
 
 
+class SportArenaSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = SportArena
+        fields = ("id", "name")
+
+
 class EventSessionSerializer(serializers.ModelSerializer):
     event_duration = serializers.CharField(source="event.duration", read_only=True)
     event_title = serializers.CharField(source="event.title", read_only=True)
@@ -68,6 +75,8 @@ class EventSessionSerializer(serializers.ModelSerializer):
     actors = ActorSerializer(many=True, read_only=True)
     genres = GenreSerializer(many=True, read_only=True)
     teams = TeamSerializer(many=True, read_only=True)
+    # sport_arena = SportArenaSerializer(many=True, read_only=True)
+
     # event = EventSerializer()
 
     class Meta:
@@ -83,11 +92,16 @@ class EventSessionSerializer(serializers.ModelSerializer):
             "teams",
             "event_image",
             "sections",
+            "sportarena",
         )
 
 
 class EventSessionListSerializer(EventSessionSerializer):
+
     event = EventSerializer()
+    sportarena = SportArenaSerializer()
+    # sport_arena = serializers.CharField(source="sport_arena.name", read_only=True)
+
     event_title = serializers.CharField(source="event.title", read_only=True)
     event_image = serializers.ImageField(source="event.image", read_only=True)
     section_name = serializers.CharField(
@@ -104,11 +118,10 @@ class EventSessionListSerializer(EventSessionSerializer):
             "id",
             "event",
             "show_time",
-            # "event_title",
-            # "event_image",
             "section_name",
             "section_capacity",
             "tickets_available",
+            "sportarena",
         )
 
 
@@ -117,13 +130,6 @@ class SectionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Section
         fields = ("id", "name", "rows", "seats_in_row")
-
-
-class SportArenaSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = SportArena
-        fields = ("id", "name")
 
 
 class TicketSerializer(serializers.ModelSerializer):
