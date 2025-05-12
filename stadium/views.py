@@ -51,8 +51,28 @@ class EventViewSet(viewsets.ModelViewSet):
     queryset = Event.objects.all()
     permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
 
+    @staticmethod
+    def _params_to_ints(qs):
+        return [int(str_id) for str_id in qs.split(",")]
+
     def get_queryset(self):
         queryset = self.queryset
+
+        actors = self.request.query_params.get("actors")
+        if actors:
+            actors=self._params_to_ints(actors)
+            queryset = queryset.filter(actors__id__in=actors)
+
+        genres = self.request.query_params.get("genres")
+        if genres:
+            genres=self._params_to_ints(genres)
+            queryset = queryset.filter(genres__id__in=genres)
+
+        teams = self.request.query_params.get("teams")
+        if teams:
+            teams=self._params_to_ints(teams)
+            queryset = queryset.filter(teams__id__in=teams)
+
         if self.action in ("list", "retrieve"):
             return queryset.prefetch_related("genres")
         return queryset
