@@ -1,3 +1,6 @@
+from datetime import datetime
+
+from django.utils.dateparse import parse_datetime
 from rest_framework import mixins, viewsets
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.viewsets import GenericViewSet
@@ -60,22 +63,19 @@ class EventViewSet(viewsets.ModelViewSet):
 
         actors = self.request.query_params.get("actors")
         if actors:
-            actors=self._params_to_ints(actors)
-            queryset = queryset.filter(actors__id__in=actors)
+            queryset = queryset.filter(actors__last_name__icontains=actors)
 
         genres = self.request.query_params.get("genres")
         if genres:
-            genres=self._params_to_ints(genres)
-            queryset = queryset.filter(genres__id__in=genres)
+            queryset = queryset.filter(genres__name__icontains=genres)
 
         teams = self.request.query_params.get("teams")
         if teams:
-            teams=self._params_to_ints(teams)
-            queryset = queryset.filter(teams__id__in=teams)
+            queryset = queryset.filter(teams__name__icontains=teams)
 
         if self.action in ("list", "retrieve"):
             return queryset.prefetch_related("genres")
-        return queryset
+        return queryset.distinct()
 
     def get_serializer_class(self):
         if self.action == "list":
@@ -116,6 +116,23 @@ class EventSessionViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = self.queryset
+
+        event = self.request.query_params.get("event")
+        if event:
+            queryset = queryset.filter(event__title__icontains=event)
+
+        sportarena = self.request.query_params.get("sportarena")
+        if sportarena:
+            queryset = queryset.filter(sportarena__name__icontains=sportarena)
+
+        show_time = self.request.query_params.get("show_time")
+        if show_time:
+            try:
+                date_obj = datetime.strptime(show_time, "%Y-%m-%d").date()
+                queryset = queryset.filter(show_time__date=date_obj)
+            except ValueError:
+                pass
+
         if self.action in ("list", "retrieve"):
             return queryset.select_related("event")
         return queryset
