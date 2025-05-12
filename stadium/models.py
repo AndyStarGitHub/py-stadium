@@ -129,42 +129,54 @@ class Order(models.Model):
 
 class Ticket(models.Model):
     event_session = models.ForeignKey(
-        EventSession, on_delete=models.CASCADE, related_name="ticket_event_sessions"
+        EventSession,
+        on_delete=models.CASCADE,
+        related_name="ticket_event_sessions"
     )
     order = models.ForeignKey(
-        Order, on_delete=models.CASCADE, related_name="ticket_orders"
+        Order, on_delete=models.CASCADE,
+        related_name="ticket_orders"
     )
     section = models.ForeignKey(Section, on_delete=models.CASCADE)
     row = models.IntegerField()
     seat = models.IntegerField()
 
     @staticmethod
-    def validate_ticket(row, seat, section, error_to_raise):
-
+    def validate_ticket(attrs, error_to_raise):
         return
 
-        for ticket_attr_value, ticket_attr_name, section_attr_name in [
-            (row, "row", "rows"),
-            (seat, "seat", "seats_in_row"),
-        ]:
-            count_attrs = getattr(section, section_attr_name)
-            if not (1 <= ticket_attr_value <= count_attrs):
-                raise error_to_raise(
-                    {
-                        ticket_attr_name: f"{ticket_attr_name} "
-                        f"number must be in available range: "
-                        f"(1, {section_attr_name}): "
-                        f"(1, {count_attrs})"
-                    }
-                )
+        # for ticket_attr_value, ticket_attr_name, section_attr_name in [
+        #     (row, "row", "rows"),
+        #     (seat, "seat", "seats_in_row"),
+        # ]:
+        #     count_attrs = getattr(section, section_attr_name)
+        #     if not (1 <= ticket_attr_value <= count_attrs):
+        #         raise error_to_raise(
+        #             {
+        #                 ticket_attr_name: f"{ticket_attr_name} "
+        #                 f"number must be in available range: "
+        #                 f"(1, {section_attr_name}): "
+        #                 f"(1, {count_attrs})"
+        #             }
+        #         )
 
     def clean(self):
-        Ticket.validate_ticket(
-            self.section,
-            self.row,
-            self.seat,
-            ValidationError,
-        )
+        # self.validate_ticket(
+        #     ValidationError,
+        # )
+        if not (1 <= self.row <= self.section.rows):
+            raise ValidationError(
+                {
+                    "row": f"row must be in range [1, {self.section.rows}], not {self.row} for section {self.section}"
+                }
+            )
+        if not (1 <= self.seat <= self.section.seats_in_row):
+            raise ValidationError(
+                {
+                    "seat": f"seat must be in range [1, {self.section.seats_in_row}], not {self.seat} for section {self.section}"
+                }
+            )
+
 
     def save(
         self,

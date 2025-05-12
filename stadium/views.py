@@ -97,7 +97,7 @@ class EventSessionViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = self.queryset
         if self.action in ("list", "retrieve"):
-            return queryset.prefetch_related("event")
+            return queryset.select_related("event")
         return queryset
 
     def get_serializer_class(self):

@@ -1,6 +1,7 @@
 from django.db import transaction
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
+from rest_framework.validators import UniqueTogetherValidator
 
 from stadium.models import Genre, SportArena, Section, Actor, Team, Event, EventSession, Ticket, Order
 
@@ -204,8 +205,8 @@ class EventSessionListSerializer(EventSessionSerializer):
 
 class EventSessionRetrieveSerializer(EventSessionSerializer):
 
-    event = EventListSerializer()
-    sportarena = SportArenaSerializer()
+    event = EventListSerializer(many=False)
+    sportarena = SportArenaSerializer(many=False)
 
     actors = ActorSerializer(many=True, read_only=True)
     genres = GenreSerializer(many=True, read_only=True)
@@ -239,18 +240,33 @@ class EventSessionRetrieveSerializer(EventSessionSerializer):
 
 class TicketSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
+        if not (1 <= attrs["row"] <= attrs["section"].rows):
+            raise serializers.ValidationError(
+                {
+                    "row": f"row must be in range [1, {attrs['section'].rows}], not {attrs['row']} for section {attrs["section"]}"
+                }
+            )
+        if not (1 <= attrs["row"] <= attrs["section"].rows):
+            raise serializers.ValidationError(
+                {
+                    "row": f"row must be in range [1, {attrs['section'].rows}], not {attrs['row']} for section {attrs["section"]}"
+                }
+            )
+        if not (1 <= attrs["seat"] <= attrs["section"].seats_in_row):
+            raise serializers.ValidationError(
+                {
+                    "seat": f"seat must be in range [1, {attrs['section'].seats_in_row}], not {attrs['seat']} for section {attrs["section"]}"
+                }
+            )
         data = super(TicketSerializer, self).validate(attrs=attrs)
-        Ticket.validate_ticket(
-            attrs.get("row"),
-            attrs.get("seat"),
-            attrs.get("section"),
-            ValidationError
-        )
+        Ticket.validate_ticket(attrs, ValidationError)
         return data
 
     class Meta:
         model = Ticket
         fields = ("id", "section", "row", "seat", "event_session")
+        unique_together = ("section", "row", "seat", "event_session")
+
 
 
 class TicketListSerializer(TicketSerializer):
