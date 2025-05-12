@@ -14,6 +14,13 @@ class SportArena(models.Model):
     def __str__(self):
         return self.name
 
+    @property
+    # def sportarena_capacity(self):
+    #     return self.sections.rows * self.sections.columns
+
+    def sportarena_capacity(self):
+        return sum(section.capacity for section in self.sections.all())
+
     class Meta:
         verbose_name_plural = 'sportarenas'
 

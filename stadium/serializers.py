@@ -114,10 +114,11 @@ class SportArenaListSerializer(SportArenaSerializer):
         many=True,
         read_only=True,
     )
+    sportarena_capacity = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = Section
-        fields = ("id", "name", "sections",)
+        fields = ("id", "name", "sections", "sportarena_capacity")
 
 
 class SportArenaRetrieveSerializer(SportArenaSerializer):
@@ -130,17 +131,17 @@ class SportArenaRetrieveSerializer(SportArenaSerializer):
 
 class SectionRetrieveSerializer(SectionSerializer):
     sportarena = SportArenaSerializer()
-
 class SectionListSerializer(SectionSerializer):
     sportarena = serializers.SlugRelatedField(
         slug_field="name",
         many=False,
         read_only=True,
     )
+    capacity = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = Section
-        fields = ("id", "name", "rows", "seats_in_row", "sportarena",)
+        fields = ("id", "name", "rows", "seats_in_row", "sportarena", "capacity")
 
 
 class EventSessionSerializer(serializers.ModelSerializer):
