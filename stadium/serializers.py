@@ -203,41 +203,6 @@ class EventSessionListSerializer(EventSessionSerializer):
         )
 
 
-class EventSessionRetrieveSerializer(EventSessionSerializer):
-
-    event = EventListSerializer(many=False)
-    sportarena = SportArenaSerializer(many=False)
-
-    actors = ActorSerializer(many=True, read_only=True)
-    genres = GenreSerializer(many=True, read_only=True)
-    teams = TeamSerializer(many=True, read_only=True)
-
-    event_title = serializers.CharField(source="event.title", read_only=True)
-    event_image = serializers.ImageField(source="event.image", read_only=True)
-    section_name = serializers.CharField(
-        source="section.name", read_only=True
-    )
-    section_capacity = serializers.IntegerField(
-        source="section.capacity", read_only=True
-    )
-    tickets_available = serializers.IntegerField(read_only=True)
-
-    class Meta:
-        model = EventSession
-        fields = (
-            "id",
-            "event",
-            "show_time",
-            "section_name",
-            "section_capacity",
-            "tickets_available",
-            "sportarena",
-            "actors",
-            "genres",
-            "teams",
-        )
-
-
 class TicketSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         if not (1 <= attrs["row"] <= attrs["section"].rows):
@@ -268,15 +233,80 @@ class TicketSerializer(serializers.ModelSerializer):
         unique_together = ("section", "row", "seat", "event_session")
 
 
+class TicketSeatsSerializer(TicketSerializer):
+    section = serializers.SlugRelatedField(
+        slug_field="name",
+        read_only=True,
+    )
+    sportarena = serializers.CharField(
+        source="section.sportarena.name",
+        read_only=True,
+    )
+
+    class Meta:
+        model = Ticket
+        fields = ("sportarena", "section", "row", "seat")
+
+
+class EventSessionRetrieveSerializer(EventSessionSerializer):
+
+    event = EventListSerializer(many=False)
+    sportarena = SportArenaSerializer(many=False)
+
+    actors = ActorSerializer(many=True, read_only=True)
+    genres = GenreSerializer(many=True, read_only=True)
+    teams = TeamSerializer(many=True, read_only=True)
+
+    event_title = serializers.CharField(source="event.title", read_only=True)
+    event_image = serializers.ImageField(source="event.image", read_only=True)
+    tickets = TicketSeatsSerializer(
+        many=True,
+        read_only=True,
+        source="ticket_event_sessions",
+    )
+
+    section_name = serializers.CharField(
+        source="section.name", read_only=True
+    )
+    section_capacity = serializers.IntegerField(
+        source="section.capacity", read_only=True
+    )
+    tickets_available = serializers.IntegerField(read_only=True)
+    # ticket_set = TicketSerializer(many=True, read_only=True)
+    # taken_seats = serializers.SlugRelatedField(
+        # many=True,
+        # read_only=True,
+        # slug_field="name",
+        # # source="taken_seats",
+        # )
+
+
+
+    class Meta:
+        model = EventSession
+        fields = (
+            "id",
+            "event",
+            "show_time",
+            "section_name",
+            "section_capacity",
+            "tickets_available",
+            "sportarena",
+            "actors",
+            "genres",
+            "teams",
+            # "ticket_event_sessions",
+            # "ticket_set",
+            # "taken_seats",
+            "tickets"
+        )
+
 
 class TicketListSerializer(TicketSerializer):
     event_session = EventSessionListSerializer(many=False, read_only=True)
 
 
-class TicketSeatsSerializer(TicketSerializer):
-    class Meta:
-        model = Ticket
-        fields = ("section", "row", "seat")
+
 
 
 class OrderSerializer(serializers.ModelSerializer):
