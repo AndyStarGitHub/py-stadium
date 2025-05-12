@@ -16,13 +16,20 @@ from stadium.permissions import IsAdminOrIfAuthenticatedReadOnly
 from stadium.serializers import (
     ActorSerializer,
     EventSerializer,
+    EventListSerializer,
+    EventRetrieveSerializer,
     EventSessionSerializer,
+    EventSessionListSerializer,
     GenreSerializer,
     OrderSerializer,
     OrderListSerializer,
     SectionSerializer,
+    SectionListSerializer,
+    SectionRetrieveSerializer,
     SportArenaSerializer,
-    TeamSerializer, EventSessionListSerializer, EventListSerializer, EventRetrieveSerializer,
+    SportArenaListSerializer,
+    SportArenaRetrieveSerializer,
+    TeamSerializer,
     EventSessionRetrieveSerializer,
 )
 
@@ -46,7 +53,7 @@ class EventViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = self.queryset
-        if self.action == "list":
+        if self.action in ("list", "retrieve"):
             return queryset.prefetch_related("genres")
         return queryset
 
@@ -89,7 +96,7 @@ class EventSessionViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = self.queryset
-        if self.action == "list":
+        if self.action in ("list", "retrieve"):
             return queryset.prefetch_related("event")
         return queryset
 
@@ -125,8 +132,14 @@ class SectionViewSet(
     GenericViewSet,
 ):
     queryset = Section.objects.all()
-    serializer_class = SectionSerializer
     permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
+
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return SectionListSerializer
+        elif self.action == 'retrieve':
+            return SectionRetrieveSerializer
+        return SectionSerializer
 
 
 class SportArenaViewSet(
@@ -138,8 +151,14 @@ class SportArenaViewSet(
     GenericViewSet,
 ):
     queryset = SportArena.objects.all()
-    serializer_class = SportArenaSerializer
     permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
+
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return SportArenaListSerializer
+        elif self.action == 'retrieve':
+            return SportArenaRetrieveSerializer
+        return SportArenaSerializer
 
 
 class TeamViewSet(
@@ -168,7 +187,7 @@ class OrderViewSet(viewsets.ModelViewSet):
     pagination_class = OrderSetPagination
     def get_queryset(self):
         queryset = self.queryset.filter(user=self.request.user)
-        if self.action == "list":
+        if self.action in ("list", "retrieve"):
             queryset = queryset.prefetch_related("ticket_orders")
         return queryset
 

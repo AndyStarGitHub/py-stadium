@@ -7,6 +7,7 @@ from django.utils.text import slugify
 
 from django.conf import settings
 
+
 class SportArena(models.Model):
     name = models.CharField(max_length=255)
 
@@ -21,6 +22,7 @@ class Section(models.Model):
     name = models.CharField(max_length=255)
     rows = models.IntegerField()
     seats_in_row = models.IntegerField()
+    sportarena = models.ForeignKey(SportArena, on_delete=models.CASCADE, related_name="sections")
 
     @property
     def capacity(self) -> int:
@@ -31,6 +33,8 @@ class Section(models.Model):
 
     class Meta:
         verbose_name_plural = 'sections'
+        unique_together = ("sportarena", "name")
+        ordering = ["sportarena", "name"]
 
 
 class Genre(models.Model):
