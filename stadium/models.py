@@ -149,25 +149,8 @@ class Ticket(models.Model):
     def validate_ticket(attrs, error_to_raise):
         return
 
-        # for ticket_attr_value, ticket_attr_name, section_attr_name in [
-        #     (row, "row", "rows"),
-        #     (seat, "seat", "seats_in_row"),
-        # ]:
-        #     count_attrs = getattr(section, section_attr_name)
-        #     if not (1 <= ticket_attr_value <= count_attrs):
-        #         raise error_to_raise(
-        #             {
-        #                 ticket_attr_name: f"{ticket_attr_name} "
-        #                 f"number must be in available range: "
-        #                 f"(1, {section_attr_name}): "
-        #                 f"(1, {count_attrs})"
-        #             }
-        #         )
 
     def clean(self):
-        # self.validate_ticket(
-        #     ValidationError,
-        # )
         if not (1 <= self.row <= self.section.rows):
             raise ValidationError(
                 {

@@ -221,8 +221,6 @@ class EventSessionListSerializer(EventSessionSerializer):
             "teams",
             "event_title",
             "event_image",
-
-
         )
 
 

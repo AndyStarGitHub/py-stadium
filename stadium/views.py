@@ -91,32 +91,6 @@ class EventViewSet(viewsets.ModelViewSet):
         return EventSerializer
 
 
-# class EventViewSet(
-#     mixins.CreateModelMixin,
-#     mixins.ListModelMixin,
-#     mixins.RetrieveModelMixin,
-#     mixins.UpdateModelMixin,
-#     mixins.DestroyModelMixin,
-#     GenericViewSet,
-# ):
-#     queryset = Event.objects.all()
-#     serializer_class = EventSerializer
-#     permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
-
-
-# class EventSessionViewSet(
-#     mixins.CreateModelMixin,
-#     mixins.ListModelMixin,
-#     mixins.RetrieveModelMixin,
-#     mixins.UpdateModelMixin,
-#     mixins.DestroyModelMixin,
-#     GenericViewSet,
-# ):
-#     queryset = EventSession.objects.all()
-#     serializer_class = EventSessionSerializer
-#     permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
-
-
 class EventSessionSetPagination(PageNumberPagination):
     page_size = 4
     page_size_query_param = 'page_size'
