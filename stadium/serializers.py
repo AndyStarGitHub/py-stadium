@@ -172,6 +172,7 @@ class EventSessionSerializer(serializers.ModelSerializer):
 
 
 class EventSessionListSerializer(EventSessionSerializer):
+    tickets_reserved = serializers.IntegerField(read_only=True, source="ticket_event_sessions.count")
     event_title = serializers.CharField(source="event.title", read_only=True)
     event_image = serializers.ImageField(source="event.image", read_only=True)
     sportarena = serializers.SlugRelatedField(
@@ -179,6 +180,11 @@ class EventSessionListSerializer(EventSessionSerializer):
         many=False,
         read_only=True,
     )
+    sportarena_capacity = serializers.IntegerField(
+        source="sportarena.sportarena_capacity",
+        read_only=True
+    )
+
     sections = serializers.SlugRelatedField(
         slug_field="name",
         many=True,
@@ -196,11 +202,15 @@ class EventSessionListSerializer(EventSessionSerializer):
             "show_time",
             "sections",
             "sportarena",
+            "tickets_reserved",
             "actors",
             "genres",
             "teams",
             "event_title",
             "event_image",
+
+            "sportarena_capacity",
+
         )
 
 

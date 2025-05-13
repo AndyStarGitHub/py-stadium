@@ -15,9 +15,6 @@ class SportArena(models.Model):
         return self.name
 
     @property
-    # def sportarena_capacity(self):
-    #     return self.sections.rows * self.sections.columns
-
     def sportarena_capacity(self):
         return sum(section.capacity for section in self.sections.all())
 
