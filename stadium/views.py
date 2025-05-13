@@ -1,6 +1,5 @@
 from datetime import datetime
 
-from django.utils.dateparse import parse_datetime
 from rest_framework import mixins, viewsets
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.viewsets import GenericViewSet
@@ -50,9 +49,16 @@ class ActorViewSet(
     permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
 
 
+class EventSetPagination(PageNumberPagination):
+    page_size = 3
+    page_size_query_param = 'page_size'
+    max_page_size = 20
+
+
 class EventViewSet(viewsets.ModelViewSet):
     queryset = Event.objects.all()
     permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
+    pagination_class = EventSetPagination
 
     @staticmethod
     def _params_to_ints(qs):
@@ -110,9 +116,17 @@ class EventViewSet(viewsets.ModelViewSet):
 #     serializer_class = EventSessionSerializer
 #     permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
 
+
+class EventSessionSetPagination(PageNumberPagination):
+    page_size = 4
+    page_size_query_param = 'page_size'
+    max_page_size = 20
+
+
 class EventSessionViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
     queryset = EventSession.objects.all()
+    pagination_class = EventSessionSetPagination
 
     def get_queryset(self):
         queryset = self.queryset
