@@ -172,7 +172,8 @@ class EventSessionSerializer(serializers.ModelSerializer):
 
 
 class EventSessionListSerializer(EventSessionSerializer):
-    tickets_reserved = serializers.IntegerField(read_only=True, source="ticket_event_sessions.count")
+    tickets_reserved = serializers.SerializerMethodField()
+    tickets_available = serializers.SerializerMethodField()
     event_title = serializers.CharField(source="event.title", read_only=True)
     event_image = serializers.ImageField(source="event.image", read_only=True)
     sportarena = serializers.SlugRelatedField(
@@ -195,6 +196,16 @@ class EventSessionListSerializer(EventSessionSerializer):
     genres = GenreSerializer(many=True, read_only=True)
     teams = TeamSerializer(many=True, read_only=True)
 
+    def get_tickets_reserved(self, obj):
+        return obj.ticket_event_sessions.count()
+
+    def get_sportarena_capacity(self, obj):
+        return obj.sportarena.sportarena_capacity
+
+    def get_tickets_available(self, obj):
+        return self.get_sportarena_capacity(obj) - self.get_tickets_reserved(obj)
+
+
     class Meta:
         model = EventSession
         fields = (
@@ -202,14 +213,15 @@ class EventSessionListSerializer(EventSessionSerializer):
             "show_time",
             "sections",
             "sportarena",
+            "sportarena_capacity",
             "tickets_reserved",
+            "tickets_available",
             "actors",
             "genres",
             "teams",
             "event_title",
             "event_image",
 
-            "sportarena_capacity",
 
         )
 
