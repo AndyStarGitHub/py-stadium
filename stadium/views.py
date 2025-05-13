@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import mixins, viewsets
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.viewsets import GenericViewSet
@@ -90,6 +91,29 @@ class EventViewSet(viewsets.ModelViewSet):
             return EventRetrieveSerializer
         return EventSerializer
 
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                name="actors",
+                type={"type": "array", "items": {"type": "string"}},
+                description="filter by actors' last name id (ex. ?actors=Hill)",
+            ),
+            OpenApiParameter(
+                name="genres",
+                type={"type": "array", "items": {"type": "string"}},
+                description="filter by genres id (ex. ?genres=concert)",
+            ),
+            OpenApiParameter(
+                name="teams",
+                type={"type": "array", "items": {"type": "string"}},
+                description="filter by teams id (ex. ?teams=Dynamo)",
+            )
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        """Get list of events."""
+        return super().list(request, *args, **kwargs)
+
 
 class EventSessionSetPagination(PageNumberPagination):
     page_size = 4
@@ -133,6 +157,28 @@ class EventSessionViewSet(viewsets.ModelViewSet):
 
         return EventSessionSerializer
 
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                name="event",
+                type={"type": "array", "items": {"type": "string"}},
+                description="filter by events id (ex. ?event=iron)",
+            ),
+            OpenApiParameter(
+                name="sportarena",
+                type={"type": "array", "items": {"type": "string"}},
+                description="filter by sportarenas id (ex. ?sportarena=stadium)",
+            ),
+            OpenApiParameter(
+                name="show_time",
+                type={"type": "array", "items": {"type": "string"}},
+                description="filter by event session date id (ex. ?show_time=2025-05-11)",
+            ),
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        """Get list of event sessions."""
+        return super().list(request, *args, **kwargs)
 
 
 class GenreViewSet(
