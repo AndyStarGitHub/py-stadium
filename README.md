@@ -125,7 +125,7 @@ python manage.py runserver
 The project can be cloned from https://github.com/AndyStarGitHub/py-stadium.
 
 Training database should be populated by running from the command line:
-python manage.py loaddata it_task_manager_data.json 777777777777
+python manage.py loaddata stadium_data.json 
 
 To login as a superuser with the credentials:
     Login: super@stadium.mate
