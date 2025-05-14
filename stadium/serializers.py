@@ -327,9 +327,6 @@ class TicketListSerializer(TicketSerializer):
     event_session = EventSessionListSerializer(many=False, read_only=True)
 
 
-
-
-
 class OrderSerializer(serializers.ModelSerializer):
     tickets = TicketSerializer(
         many=True,
