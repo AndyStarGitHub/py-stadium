@@ -10,7 +10,7 @@ site and after the registration he can access (read only) the pages SportArenas,
 Genres, Actors, Teams, Sections, Events, EventSessions. Users can create orders
 and add tickets to them. A user can see only own orders. Our stadium can sell
 tickets not only for sports events, it can be adapted to
-a wide scope of activities. There are a set of revenues at the stadium - 
+a wide scope of activities. There are a set of venues at the stadium - 
 SportArenas, e.g. for football, hockey, concerts, exhibitions, 
 corporates, etc. Thus, each event can be marked to some Genres, e.g. football,
 basketball, rock concert, dance conquest, fair, etc. Each SportArena has 
@@ -56,6 +56,7 @@ python manage.py runserver
 * djangorestframework           3.16.0
 * djangorestframework_simplejwt 5.5.0
 * drf-spectacular               0.28.0
+* Faker
 * flake8-quotes                 3.3.1
 * flake8-variables-names        0.0.5
 * gunicorn                      23.0.0
@@ -124,18 +125,19 @@ python manage.py runserver
 
 The project can be cloned from https://github.com/AndyStarGitHub/py-stadium.
 
-Training database should be populated by running from the command line:
-python manage.py loaddata stadium_data.json 
+Training database has been populated with faked data. 
 
 To login as a superuser with the credentials:
     Login: super@stadium.mate
     Password: ueur!!77eeen
 
 
-77777777777777
-docker
-77777777777777
+## Run with Docker
 
+Docker must be installed.
+To run the commands:
+    docker-compose build
+    docker-compose up
 
 
 
