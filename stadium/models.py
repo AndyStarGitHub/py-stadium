@@ -180,12 +180,12 @@ class Ticket(models.Model):
                     "seat": f"seat must be in range [1, {self.section.seats_in_row}], not {self.seat} for section {self.section}"
                 }
             )
-        if self.section not in self.event_session.sections.all():
-            raise ValidationError(
-                {
-                    "section": f"The section {self.section.name} doesn't belong to the event venue sport arena {self.event_session.sportarena.name}"
-                }
-            )
+        # if self.section not in self.event_session.sections.all():
+        #     raise ValidationError(
+        #         {
+        #             "section": f"The section {self.section.name} doesn't belong to the event venue sport arena {self.event_session.sportarena.name}"
+        #         }
+        #     )
 
     def save(
         self,

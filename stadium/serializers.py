@@ -330,7 +330,6 @@ class OrderSerializer(serializers.ModelSerializer):
         many=True,
         read_only=False,
         allow_empty=False,
-        # source="ticket_orders",
     )
     tickets = TicketSerializer(many=True, read_only=True)
 
@@ -338,17 +337,9 @@ class OrderSerializer(serializers.ModelSerializer):
         model = Order
         fields = ("id", "tickets", "created_at", "ticket_orders")
 
-    # def create(self, validated_data):
-    #     with transaction.atomic():
-    #         tickets_data = validated_data.pop("ticket_orders")
-    #         order = Order.objects.create(**validated_data)
-    #         for ticket_data in tickets_data:
-    #             Ticket.objects.create(order=order, **ticket_data)
-    #         return order
-
     def create_ticket(self, order, ticket_data):
         try:
-            Ticket.objects.create(order=order, **ticket_data)
+          Ticket.objects.get_or_create(order=order, **ticket_data)
         except DjangoValidationError as e:
             raise ValidationError(e.message_dict)
 
