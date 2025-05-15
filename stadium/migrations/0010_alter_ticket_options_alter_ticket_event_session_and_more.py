@@ -7,27 +7,39 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('stadium', '0009_event_sportarena'),
+        ("stadium", "0009_event_sportarena"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='ticket',
-            options={'ordering': ['section', 'row', 'seat']},
+            name="ticket",
+            options={"ordering": ["section", "row", "seat"]},
         ),
         migrations.AlterField(
-            model_name='ticket',
-            name='event_session',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='ticket_eventsession', to='stadium.eventsession'),
+            model_name="ticket",
+            name="event_session",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="ticket_eventsession",
+                to="stadium.eventsession",
+            ),
         ),
         migrations.AlterField(
-            model_name='ticket',
-            name='order',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='tickets', to='stadium.order'),
+            model_name="ticket",
+            name="order",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="tickets",
+                to="stadium.order",
+            ),
         ),
         migrations.AlterField(
-            model_name='ticket',
-            name='section',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='ticket_order', to='stadium.section'),
+            model_name="ticket",
+            name="section",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="ticket_order",
+                to="stadium.section",
+            ),
         ),
     ]

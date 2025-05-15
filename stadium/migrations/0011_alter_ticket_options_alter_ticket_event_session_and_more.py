@@ -7,27 +7,40 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('stadium', '0010_alter_ticket_options_alter_ticket_event_session_and_more'),
+        ("stadium", "0010_alter_ticket_options_alter_ticket_event_session_and_more"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='ticket',
-            options={'ordering': ['section', 'row', 'seat'], 'verbose_name_plural': 'tickets'},
+            name="ticket",
+            options={
+                "ordering": ["section", "row", "seat"],
+                "verbose_name_plural": "tickets",
+            },
         ),
         migrations.AlterField(
-            model_name='ticket',
-            name='event_session',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='ticket_event_sessions', to='stadium.eventsession'),
+            model_name="ticket",
+            name="event_session",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="ticket_event_sessions",
+                to="stadium.eventsession",
+            ),
         ),
         migrations.AlterField(
-            model_name='ticket',
-            name='order',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='ticket_orders', to='stadium.order'),
+            model_name="ticket",
+            name="order",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="ticket_orders",
+                to="stadium.order",
+            ),
         ),
         migrations.AlterField(
-            model_name='ticket',
-            name='section',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='stadium.section'),
+            model_name="ticket",
+            name="section",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to="stadium.section"
+            ),
         ),
     ]

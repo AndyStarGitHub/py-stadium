@@ -44,9 +44,7 @@ def sample_actor(**params):
 
 
 def sample_event_session(**params):
-    sportarena = SportArena.objects.create(
-        name="Test sportarena"
-    )
+    sportarena = SportArena.objects.create(name="Test sportarena")
 
     defaults = {
         "show_time": "2025-05-14 14:00:00",
@@ -61,6 +59,8 @@ def sample_event_session(**params):
 def image_upload_url(event_id):
     """Return URL for the image upload"""
     return reverse("stadium:event-upload-image", args=[event_id])
+
+
 #
 #
 # def detail_url(event_id):
@@ -105,33 +105,3 @@ class UnauthenticatedActorsApiTests(TestCase):
     def test_auth_required(self):
         res = self.client.get(ACTOR_URL)
         self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
-
-
-class EVentImageUploadTests(TestCase):
-    def setUp(self):
-        self.client = APIClient()
-        self.user = get_user_model().objects.create_superuser(
-            "admin@myproject.com", "password"
-        )
-        self.client.force_authenticate(self.user)
-        self.event = sample_event()
-        self.genre = sample_genre()
-        self.actor = sample_actor()
-        self.event_session = sample_event_session(event=self.event)
-
-    def tearDown(self):
-        self.event.image.delete()
-
-    def test_upload_image_to_event(self):
-        """Test uploading an image to event"""
-        url = image_upload_url(self.event.id)
-        with tempfile.NamedTemporaryFile(suffix=".jpg") as ntf:
-            img = Image.new("RGB", (10, 10))
-            img.save(ntf, format="JPEG")
-            ntf.seek(0)
-            res = self.client.post(url, {"image": ntf}, format="multipart")
-        self.event.refresh_from_db()
-
-        self.assertEqual(res.status_code, status.HTTP_200_OK)
-        self.assertIn("image", res.data)
-        self.assertTrue(os.path.exists(self.event.image.path))

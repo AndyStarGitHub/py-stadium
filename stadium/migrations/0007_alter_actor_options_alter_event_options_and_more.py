@@ -8,55 +8,65 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('stadium', '0006_alter_event_actors_alter_event_teams'),
+        ("stadium", "0006_alter_event_actors_alter_event_teams"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='actor',
-            options={'verbose_name_plural': 'actors'},
+            name="actor",
+            options={"verbose_name_plural": "actors"},
         ),
         migrations.AlterModelOptions(
-            name='event',
-            options={'ordering': ['title'], 'verbose_name_plural': 'events'},
+            name="event",
+            options={"ordering": ["title"], "verbose_name_plural": "events"},
         ),
         migrations.AlterModelOptions(
-            name='eventsession',
-            options={'ordering': ['-show_time'], 'verbose_name_plural': 'eventsessions'},
+            name="eventsession",
+            options={
+                "ordering": ["-show_time"],
+                "verbose_name_plural": "eventsessions",
+            },
         ),
         migrations.AlterModelOptions(
-            name='genre',
-            options={'verbose_name_plural': 'genres'},
+            name="genre",
+            options={"verbose_name_plural": "genres"},
         ),
         migrations.AlterModelOptions(
-            name='order',
-            options={'ordering': ['-created_at'], 'verbose_name_plural': 'orders'},
+            name="order",
+            options={"ordering": ["-created_at"], "verbose_name_plural": "orders"},
         ),
         migrations.AlterModelOptions(
-            name='section',
-            options={'verbose_name_plural': 'sections'},
+            name="section",
+            options={"verbose_name_plural": "sections"},
         ),
         migrations.AlterModelOptions(
-            name='sportarena',
-            options={'verbose_name_plural': 'sportarenas'},
+            name="sportarena",
+            options={"verbose_name_plural": "sportarenas"},
         ),
         migrations.AlterModelOptions(
-            name='team',
-            options={'verbose_name_plural': 'teams'},
+            name="team",
+            options={"verbose_name_plural": "teams"},
         ),
         migrations.AlterModelOptions(
-            name='ticket',
-            options={'ordering': ['section', 'row', 'seat'], 'verbose_name_plural': 'tickets'},
+            name="ticket",
+            options={
+                "ordering": ["section", "row", "seat"],
+                "verbose_name_plural": "tickets",
+            },
         ),
         migrations.RenameField(
-            model_name='eventsession',
-            old_name='section',
-            new_name='sections',
+            model_name="eventsession",
+            old_name="section",
+            new_name="sections",
         ),
         migrations.AlterField(
-            model_name='order',
-            name='user',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='orders', to=settings.AUTH_USER_MODEL),
+            model_name="order",
+            name="user",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="orders",
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
     ]

@@ -6,16 +6,19 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('stadium', '0014_remove_sportarena_section_section_sportarena'),
+        ("stadium", "0014_remove_sportarena_section_section_sportarena"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='section',
-            options={'ordering': ['sportarena', 'name'], 'verbose_name_plural': 'sections'},
+            name="section",
+            options={
+                "ordering": ["sportarena", "name"],
+                "verbose_name_plural": "sections",
+            },
         ),
         migrations.AlterUniqueTogether(
-            name='section',
-            unique_together={('sportarena', 'name')},
+            name="section",
+            unique_together={("sportarena", "name")},
         ),
     ]

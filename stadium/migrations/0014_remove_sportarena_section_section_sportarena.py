@@ -7,18 +7,23 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('stadium', '0013_sportarena_section'),
+        ("stadium", "0013_sportarena_section"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='sportarena',
-            name='section',
+            model_name="sportarena",
+            name="section",
         ),
         migrations.AddField(
-            model_name='section',
-            name='sportarena',
-            field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.CASCADE, related_name='sections', to='stadium.sportarena'),
+            model_name="section",
+            name="sportarena",
+            field=models.ForeignKey(
+                default=1,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="sections",
+                to="stadium.sportarena",
+            ),
             preserve_default=False,
         ),
     ]

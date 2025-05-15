@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('stadium', '0003_remove_eventsession_section_eventsession_section'),
+        ("stadium", "0003_remove_eventsession_section_eventsession_section"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='event',
-            name='teams',
-            field=models.ManyToManyField(related_name='event_teams', to='stadium.team'),
+            model_name="event",
+            name="teams",
+            field=models.ManyToManyField(related_name="event_teams", to="stadium.team"),
         ),
     ]

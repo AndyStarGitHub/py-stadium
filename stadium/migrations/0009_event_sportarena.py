@@ -7,14 +7,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('stadium', '0008_alter_eventsession_event'),
+        ("stadium", "0008_alter_eventsession_event"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='event',
-            name='sportarena',
-            field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.CASCADE, to='stadium.sportarena'),
+            model_name="event",
+            name="sportarena",
+            field=models.ForeignKey(
+                default=1,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="stadium.sportarena",
+            ),
             preserve_default=False,
         ),
     ]

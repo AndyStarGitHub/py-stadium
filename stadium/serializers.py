@@ -1,7 +1,5 @@
-from django.db import transaction
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
-from django.core.exceptions import ValidationError as DjangoValidationError
 
 from stadium.models import (
     Genre,
@@ -36,7 +34,7 @@ class EventSerializer(serializers.ModelSerializer):
             "actors",
             "teams",
             "image",
-          )
+        )
 
 
 class GenreSerializer(serializers.ModelSerializer):
@@ -103,11 +101,19 @@ class EventRetrieveSerializer(serializers.ModelSerializer):
 
 
 class SectionSerializer(serializers.ModelSerializer):
-    sportarena = serializers.PrimaryKeyRelatedField(queryset=SportArena.objects.all())
+    sportarena = serializers.PrimaryKeyRelatedField(
+        queryset=SportArena.objects.all()
+    )
 
     class Meta:
         model = Section
-        fields = ("id", "sportarena", "name", "rows", "seats_in_row")
+        fields = (
+            "id",
+            "sportarena",
+            "name",
+            "rows",
+            "seats_in_row"
+        )
 
 
 class SportArenaSerializer(serializers.ModelSerializer):
@@ -141,6 +147,8 @@ class SportArenaRetrieveSerializer(SportArenaSerializer):
 
 class SectionRetrieveSerializer(SectionSerializer):
     sportarena = SportArenaSerializer()
+
+
 class SectionListSerializer(SectionSerializer):
     sportarena = serializers.SlugRelatedField(
         slug_field="name",
@@ -151,14 +159,32 @@ class SectionListSerializer(SectionSerializer):
 
     class Meta:
         model = Section
-        fields = ("id", "name", "rows", "seats_in_row", "sportarena", "capacity")
+        fields = (
+            "id",
+            "name",
+            "rows",
+            "seats_in_row",
+            "sportarena",
+            "capacity"
+        )
 
 
 class EventSessionSerializer(serializers.ModelSerializer):
-    event_duration = serializers.CharField(source="event.duration", read_only=True)
-    event_title = serializers.CharField(source="event.title", read_only=True)
-    event_image = serializers.ImageField(source="event.image", read_only=True)
-    sportarena = serializers.PrimaryKeyRelatedField(queryset=SportArena.objects.all())
+    event_duration = serializers.CharField(
+        source="event.duration",
+        read_only=True
+    )
+    event_title = serializers.CharField(
+        source="event.title",
+        read_only=True
+    )
+    event_image = serializers.ImageField(
+        source="event.image",
+        read_only=True
+    )
+    sportarena = serializers.PrimaryKeyRelatedField(
+        queryset=SportArena.objects.all()
+    )
 
     actors = ActorSerializer(many=True, read_only=True)
     genres = GenreSerializer(many=True, read_only=True)
@@ -192,8 +218,7 @@ class EventSessionListSerializer(EventSessionSerializer):
         read_only=True,
     )
     sportarena_capacity = serializers.IntegerField(
-        source="sportarena.sportarena_capacity",
-        read_only=True
+        source="sportarena.sportarena_capacity", read_only=True
     )
 
     sections = serializers.SlugRelatedField(
@@ -213,8 +238,8 @@ class EventSessionListSerializer(EventSessionSerializer):
         return obj.sportarena.sportarena_capacity
 
     def get_tickets_available(self, obj):
-        return self.get_sportarena_capacity(obj) - self.get_tickets_reserved(obj)
-
+        return (self.get_sportarena_capacity(obj)
+                - self.get_tickets_reserved(obj))
 
     class Meta:
         model = EventSession
@@ -239,19 +264,27 @@ class TicketSerializer(serializers.ModelSerializer):
         if not (1 <= attrs["row"] <= attrs["section"].rows):
             raise serializers.ValidationError(
                 {
-                    "row": f"row must be in range [1, {attrs['section'].rows}], not {attrs['row']} for section {attrs["section"]}"
+                    "row": f"row must be in range ["
+                    f"1, {attrs['section'].rows}], "
+                    f"not {attrs['row']} for "
+                    f"section {attrs["section"]}"
                 }
             )
         # if not (1 <= attrs["row"] <= attrs["section"].rows):
         #     raise serializers.ValidationError(
         #         {
-        #             "row": f"row must be in range [1, {attrs['section'].rows}], not {attrs['row']} for section {attrs["section"]}"
+        #             "row": f"row must be in range [1,
+        #             {attrs['section'].rows}], not {attrs['row']} for
+        #             section {attrs["section"]}"
         #         }
         #     )
         if not (1 <= attrs["seat"] <= attrs["section"].seats_in_row):
             raise serializers.ValidationError(
                 {
-                    "seat": f"seat must be in range [1, {attrs['section'].seats_in_row}], not {attrs['seat']} for section {attrs["section"]}"
+                    "seat": f"seat must be in range "
+                    f"[1, {attrs['section'].seats_in_row}], "
+                    f"not {attrs['seat']} for "
+                    f"section {attrs["section"]}"
                 }
             )
         data = super(TicketSerializer, self).validate(attrs=attrs)
@@ -296,9 +329,7 @@ class EventSessionRetrieveSerializer(EventSessionSerializer):
         source="ticket_event_sessions",
     )
 
-    section_name = serializers.CharField(
-        source="section.name", read_only=True
-    )
+    section_name = serializers.CharField(source="section.name", read_only=True)
     section_capacity = serializers.IntegerField(
         source="section.capacity", read_only=True
     )
@@ -317,7 +348,7 @@ class EventSessionRetrieveSerializer(EventSessionSerializer):
             "actors",
             "genres",
             "teams",
-            "tickets"
+            "tickets",
         )
 
 
@@ -339,9 +370,11 @@ class OrderSerializer(serializers.ModelSerializer):
 
     def create_ticket(self, order, ticket_data):
         try:
-          Ticket.objects.get_or_create(order=order, **ticket_data)
-        except DjangoValidationError as e:
-            raise ValidationError(e.message_dict)
+            Ticket.objects.get_or_create(order=order, **ticket_data)
+        # except DjangoValidationError as e:
+        #     raise ValidationError(e.message_dict)
+        except ValidationError:
+            print("Ticket not validated")
 
     def create(self, validated_data):
         tickets_data = validated_data.pop("ticket_orders")

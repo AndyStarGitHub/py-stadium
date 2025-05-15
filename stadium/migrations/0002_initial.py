@@ -10,38 +10,52 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('stadium', '0001_initial'),
+        ("stadium", "0001_initial"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='order',
-            name='user',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
+            model_name="order",
+            name="user",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL
+            ),
         ),
         migrations.AddField(
-            model_name='eventsession',
-            name='section',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='stadium.sportarena'),
+            model_name="eventsession",
+            name="section",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to="stadium.sportarena"
+            ),
         ),
         migrations.AddField(
-            model_name='ticket',
-            name='event_session',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='ticket_sessions', to='stadium.eventsession'),
+            model_name="ticket",
+            name="event_session",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="ticket_sessions",
+                to="stadium.eventsession",
+            ),
         ),
         migrations.AddField(
-            model_name='ticket',
-            name='order',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='ticket_orders', to='stadium.order'),
+            model_name="ticket",
+            name="order",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="ticket_orders",
+                to="stadium.order",
+            ),
         ),
         migrations.AddField(
-            model_name='ticket',
-            name='section',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='stadium.section'),
+            model_name="ticket",
+            name="section",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to="stadium.section"
+            ),
         ),
         migrations.AlterUniqueTogether(
-            name='ticket',
-            unique_together={('event_session', 'section', 'row', 'seat')},
+            name="ticket",
+            unique_together={("event_session", "section", "row", "seat")},
         ),
     ]

@@ -19,7 +19,7 @@ class SportArena(models.Model):
         return sum(section.capacity for section in self.sections.all())
 
     class Meta:
-        verbose_name_plural = 'sportarenas'
+        verbose_name_plural = "sportarenas"
 
 
 class Section(models.Model):
@@ -27,9 +27,7 @@ class Section(models.Model):
     rows = models.IntegerField()
     seats_in_row = models.IntegerField()
     sportarena = models.ForeignKey(
-        SportArena,
-        on_delete=models.CASCADE,
-        related_name="sections"
+        SportArena, on_delete=models.CASCADE, related_name="sections"
     )
 
     @property
@@ -40,7 +38,7 @@ class Section(models.Model):
         return self.name
 
     class Meta:
-        verbose_name_plural = 'sections'
+        verbose_name_plural = "sections"
         unique_together = ("sportarena", "name")
         ordering = ["sportarena", "name"]
 
@@ -53,7 +51,7 @@ class Genre(models.Model):
         return self.name
 
     class Meta:
-        verbose_name_plural = 'genres'
+        verbose_name_plural = "genres"
 
 
 class Actor(models.Model):
@@ -68,7 +66,7 @@ class Actor(models.Model):
         return f"{self.first_name} {self.last_name}"
 
     class Meta:
-        verbose_name_plural = 'actors'
+        verbose_name_plural = "actors"
 
 
 class Team(models.Model):
@@ -78,7 +76,7 @@ class Team(models.Model):
         return self.name
 
     class Meta:
-        verbose_name_plural = 'teams'
+        verbose_name_plural = "teams"
 
 
 def event_image_file_path(instance, filename):
@@ -119,8 +117,15 @@ class Event(models.Model):
 class EventSession(models.Model):
     show_time = models.DateTimeField()
     sportarena = models.ForeignKey(SportArena, on_delete=models.CASCADE)
-    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name="event")
-    sections = models.ManyToManyField(Section, related_name="sections")
+    event = models.ForeignKey(
+        Event,
+        on_delete=models.CASCADE,
+        related_name="event"
+    )
+    sections = models.ManyToManyField(
+        Section,
+        related_name="sections"
+    )
 
     class Meta:
         ordering = ["-show_time"]
@@ -153,13 +158,9 @@ class Ticket(models.Model):
         related_name="ticket_event_sessions"
     )
     order = models.ForeignKey(
-        Order, on_delete=models.CASCADE,
-        related_name="ticket_orders"
+        Order, on_delete=models.CASCADE, related_name="ticket_orders"
     )
-    section = models.ForeignKey(
-        Section,
-        on_delete=models.CASCADE
-    )
+    section = models.ForeignKey(Section, on_delete=models.CASCADE)
     row = models.IntegerField()
     seat = models.IntegerField()
 
@@ -171,19 +172,24 @@ class Ticket(models.Model):
         if not (1 <= self.row <= self.section.rows):
             raise ValidationError(
                 {
-                    "row": f"row must be in range [1, {self.section.rows}], not {self.row} for section {self.section}"
+                    "row": f"row must be in range [1, {self.section.rows}], "
+                    f"not {self.row} for section {self.section}"
                 }
             )
         if not (1 <= self.seat <= self.section.seats_in_row):
             raise ValidationError(
                 {
-                    "seat": f"seat must be in range [1, {self.section.seats_in_row}], not {self.seat} for section {self.section}"
+                    "seat": f"seat must be in range "
+                    f"[1, {self.section.seats_in_row}], "
+                    f"not {self.seat} for section {self.section}"
                 }
             )
         # if self.section not in self.event_session.sections.all():
         #     raise ValidationError(
         #         {
-        #             "section": f"The section {self.section.name} doesn't belong to the event venue sport arena {self.event_session.sportarena.name}"
+        #             "section": f"The section {self.section.name}
+        #             doesn't belong to the event venue sport arena
+        #             {self.event_session.sportarena.name}"
         #         }
         #     )
 
@@ -200,9 +206,9 @@ class Ticket(models.Model):
         )
 
     def __str__(self):
-        return (
-            f"{str(self.event_session)} (section: {self.section.name}, row: {self.row}, seat: {self.seat})"
-        )
+        return (f"{str(self.event_session)} "
+                f"(section: {self.section.name}, "
+                f"row: {self.row}, seat: {self.seat})")
 
     class Meta:
         unique_together = ("event_session", "section", "row", "seat")

@@ -52,7 +52,7 @@ class ActorViewSet(
 
 class EventSetPagination(PageNumberPagination):
     page_size = 3
-    page_size_query_param = 'page_size'
+    page_size_query_param = "page_size"
     max_page_size = 20
 
 
@@ -96,7 +96,7 @@ class EventViewSet(viewsets.ModelViewSet):
             OpenApiParameter(
                 name="actors",
                 type={"type": "array", "items": {"type": "string"}},
-                description="filter by actors' last name id (ex. ?actors=Hill)",
+                description="filter by actors' last name id (ex. ?actors=Jo)",
             ),
             OpenApiParameter(
                 name="genres",
@@ -107,7 +107,7 @@ class EventViewSet(viewsets.ModelViewSet):
                 name="teams",
                 type={"type": "array", "items": {"type": "string"}},
                 description="filter by teams id (ex. ?teams=Dynamo)",
-            )
+            ),
         ]
     )
     def list(self, request, *args, **kwargs):
@@ -117,7 +117,7 @@ class EventViewSet(viewsets.ModelViewSet):
 
 class EventSessionSetPagination(PageNumberPagination):
     page_size = 4
-    page_size_query_param = 'page_size'
+    page_size_query_param = "page_size"
     max_page_size = 20
 
 
@@ -167,12 +167,13 @@ class EventSessionViewSet(viewsets.ModelViewSet):
             OpenApiParameter(
                 name="sportarena",
                 type={"type": "array", "items": {"type": "string"}},
-                description="filter by sportarenas id (ex. ?sportarena=stadium)",
+                description="filter by sportarenas (ex. ?sportarena=stadium)",
             ),
             OpenApiParameter(
                 name="show_time",
                 type={"type": "array", "items": {"type": "string"}},
-                description="filter by event session date id (ex. ?show_time=2025-05-11)",
+                description="filter by event session date id "
+                            "(ex. ?show_time=2025-05-11)",
             ),
         ]
     )
@@ -206,9 +207,9 @@ class SectionViewSet(
     permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
 
     def get_serializer_class(self):
-        if self.action == 'list':
+        if self.action == "list":
             return SectionListSerializer
-        elif self.action == 'retrieve':
+        elif self.action == "retrieve":
             return SectionRetrieveSerializer
         return SectionSerializer
 
@@ -225,9 +226,9 @@ class SportArenaViewSet(
     permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
 
     def get_serializer_class(self):
-        if self.action == 'list':
+        if self.action == "list":
             return SportArenaListSerializer
-        elif self.action == 'retrieve':
+        elif self.action == "retrieve":
             return SportArenaRetrieveSerializer
         return SportArenaSerializer
 
@@ -245,10 +246,9 @@ class TeamViewSet(
     permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
 
 
-
 class OrderSetPagination(PageNumberPagination):
     page_size = 3
-    page_size_query_param = 'page_size'
+    page_size_query_param = "page_size"
     max_page_size = 20
 
 
@@ -256,6 +256,7 @@ class OrderViewSet(viewsets.ModelViewSet):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
     pagination_class = OrderSetPagination
+
     def get_queryset(self):
         queryset = self.queryset.filter(user=self.request.user)
         if self.action in ("list", "retrieve"):
@@ -267,6 +268,6 @@ class OrderViewSet(viewsets.ModelViewSet):
 
     def get_serializer_class(self):
         serializer = self.serializer_class
-        if self.action == 'list':
+        if self.action == "list":
             serializer = OrderListSerializer
         return serializer
