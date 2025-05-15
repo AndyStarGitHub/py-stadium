@@ -1,9 +1,19 @@
 from django.db import transaction
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
-from rest_framework.validators import UniqueTogetherValidator
+from django.core.exceptions import ValidationError as DjangoValidationError
 
-from stadium.models import Genre, SportArena, Section, Actor, Team, Event, EventSession, Ticket, Order
+from stadium.models import (
+    Genre,
+    SportArena,
+    Section,
+    Actor,
+    Team,
+    Event,
+    EventSession,
+    Ticket,
+    Order,
+)
 
 
 class ActorSerializer(serializers.ModelSerializer):
@@ -232,12 +242,12 @@ class TicketSerializer(serializers.ModelSerializer):
                     "row": f"row must be in range [1, {attrs['section'].rows}], not {attrs['row']} for section {attrs["section"]}"
                 }
             )
-        if not (1 <= attrs["row"] <= attrs["section"].rows):
-            raise serializers.ValidationError(
-                {
-                    "row": f"row must be in range [1, {attrs['section'].rows}], not {attrs['row']} for section {attrs["section"]}"
-                }
-            )
+        # if not (1 <= attrs["row"] <= attrs["section"].rows):
+        #     raise serializers.ValidationError(
+        #         {
+        #             "row": f"row must be in range [1, {attrs['section'].rows}], not {attrs['row']} for section {attrs["section"]}"
+        #         }
+        #     )
         if not (1 <= attrs["seat"] <= attrs["section"].seats_in_row):
             raise serializers.ValidationError(
                 {
@@ -293,15 +303,6 @@ class EventSessionRetrieveSerializer(EventSessionSerializer):
         source="section.capacity", read_only=True
     )
     tickets_available = serializers.IntegerField(read_only=True)
-    # ticket_set = TicketSerializer(many=True, read_only=True)
-    # taken_seats = serializers.SlugRelatedField(
-        # many=True,
-        # read_only=True,
-        # slug_field="name",
-        # # source="taken_seats",
-        # )
-
-
 
     class Meta:
         model = EventSession
@@ -316,9 +317,6 @@ class EventSessionRetrieveSerializer(EventSessionSerializer):
             "actors",
             "genres",
             "teams",
-            # "ticket_event_sessions",
-            # "ticket_set",
-            # "taken_seats",
             "tickets"
         )
 
@@ -328,24 +326,40 @@ class TicketListSerializer(TicketSerializer):
 
 
 class OrderSerializer(serializers.ModelSerializer):
-    tickets = TicketSerializer(
+    ticket_orders = TicketSerializer(
         many=True,
         read_only=False,
         allow_empty=False,
-        source="ticket_orders",
+        # source="ticket_orders",
     )
+    tickets = TicketSerializer(many=True, read_only=True)
 
     class Meta:
         model = Order
-        fields = ("id", "tickets", "created_at")
+        fields = ("id", "tickets", "created_at", "ticket_orders")
+
+    # def create(self, validated_data):
+    #     with transaction.atomic():
+    #         tickets_data = validated_data.pop("ticket_orders")
+    #         order = Order.objects.create(**validated_data)
+    #         for ticket_data in tickets_data:
+    #             Ticket.objects.create(order=order, **ticket_data)
+    #         return order
+
+    def create_ticket(self, order, ticket_data):
+        try:
+            Ticket.objects.create(order=order, **ticket_data)
+        except DjangoValidationError as e:
+            raise ValidationError(e.message_dict)
 
     def create(self, validated_data):
-        with transaction.atomic():
-            tickets_data = validated_data.pop("ticket_orders")
-            order = Order.objects.create(**validated_data)
-            for ticket_data in tickets_data:
-                Ticket.objects.create(order=order, **ticket_data)
-            return order
+        tickets_data = validated_data.pop("ticket_orders")
+        order = Order.objects.create(**validated_data)
+
+        for ticket_data in tickets_data:
+            self.create_ticket(order, ticket_data)
+
+        return order
 
 
 class OrderListSerializer(OrderSerializer):
