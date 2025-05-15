@@ -12,6 +12,7 @@ from .models import (
     Team,
 )
 
+
 class TicketInline(admin.TabularInline):
     model = Ticket
     extra = 1
@@ -19,7 +20,6 @@ class TicketInline(admin.TabularInline):
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
     inlines = (TicketInline,)
-
 
 
 admin.site.register(SportArena)
@@ -31,4 +31,3 @@ admin.site.register(EventSession)
 # admin.site.register(Order, OrderAdmin)
 admin.site.register(Team)
 admin.site.register(Ticket)
-

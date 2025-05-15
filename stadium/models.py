@@ -26,7 +26,11 @@ class Section(models.Model):
     name = models.CharField(max_length=255)
     rows = models.IntegerField()
     seats_in_row = models.IntegerField()
-    sportarena = models.ForeignKey(SportArena, on_delete=models.CASCADE, related_name="sections")
+    sportarena = models.ForeignKey(
+        SportArena,
+        on_delete=models.CASCADE,
+        related_name="sections"
+    )
 
     @property
     def capacity(self) -> int:
@@ -89,9 +93,20 @@ class Event(models.Model):
     description = models.TextField()
     duration = models.IntegerField()
     genres = models.ManyToManyField(Genre, related_name="event_genres")
-    actors = models.ManyToManyField(Actor, blank=True, related_name="event_actors")
-    teams = models.ManyToManyField(Team, blank=True, related_name="event_teams")
-    image = models.ImageField(null=True, upload_to=event_image_file_path)
+    actors = models.ManyToManyField(
+        Actor,
+        blank=True,
+        related_name="event_actors"
+    )
+    teams = models.ManyToManyField(
+        Team,
+        blank=True,
+        related_name="event_teams"
+    )
+    image = models.ImageField(
+        null=True,
+        upload_to=event_image_file_path
+    )
 
     class Meta:
         ordering = ["title"]
@@ -141,14 +156,16 @@ class Ticket(models.Model):
         Order, on_delete=models.CASCADE,
         related_name="ticket_orders"
     )
-    section = models.ForeignKey(Section, on_delete=models.CASCADE)
+    section = models.ForeignKey(
+        Section,
+        on_delete=models.CASCADE
+    )
     row = models.IntegerField()
     seat = models.IntegerField()
 
     @staticmethod
     def validate_ticket(attrs, error_to_raise):
         return
-
 
     def clean(self):
         if not (1 <= self.row <= self.section.rows):
@@ -163,7 +180,12 @@ class Ticket(models.Model):
                     "seat": f"seat must be in range [1, {self.section.seats_in_row}], not {self.seat} for section {self.section}"
                 }
             )
-
+        if self.section not in self.event_session.sections.all():
+            raise ValidationError(
+                {
+                    "section": f"The section {self.section.name} doesn't belong to the event venue sport arena {self.event_session.sportarena.name}"
+                }
+            )
 
     def save(
         self,
@@ -186,4 +208,3 @@ class Ticket(models.Model):
         unique_together = ("event_session", "section", "row", "seat")
         ordering = ["section", "row", "seat"]
         verbose_name_plural = "tickets"
-

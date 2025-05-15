@@ -107,7 +107,6 @@ class UnauthenticatedActorsApiTests(TestCase):
         self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
 
 
-
 class EVentImageUploadTests(TestCase):
     def setUp(self):
         self.client = APIClient()
@@ -136,66 +135,3 @@ class EVentImageUploadTests(TestCase):
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertIn("image", res.data)
         self.assertTrue(os.path.exists(self.event.image.path))
-#
-#     def test_upload_image_bad_request(self):
-#         """Test uploading an invalid image"""
-#         url = image_upload_url(self.event.id)
-#         res = self.client.post(url, {"image": "not image"}, format="multipart")
-#
-#         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
-#
-#     def test_post_image_to_event_list(self):
-#         url = EVENT_URL
-#         with tempfile.NamedTemporaryFile(suffix=".jpg") as ntf:
-#             img = Image.new("RGB", (10, 10))
-#             img.save(ntf, format="JPEG")
-#             ntf.seek(0)
-#             res = self.client.post(
-#                 url,
-#                 {
-#                     "title": "Title",
-#                     "description": "Description",
-#                     "duration": 90,
-#                     "genres": [1],
-#                     "actors": [1],
-#                     "image": ntf,
-#                 },
-#                 format="multipart",
-#             )
-#
-#         self.assertEqual(res.status_code, status.HTTP_201_CREATED)
-#         event = Event.objects.get(title="Title")
-#         self.assertFalse(event.image)
-#
-#     def test_image_url_is_shown_on_event_detail(self):
-#         url = image_upload_url(self.event.id)
-#         with tempfile.NamedTemporaryFile(suffix=".jpg") as ntf:
-#             img = Image.new("RGB", (10, 10))
-#             img.save(ntf, format="JPEG")
-#             ntf.seek(0)
-#             self.client.post(url, {"image": ntf}, format="multipart")
-#         res = self.client.get(detail_url(self.event.id))
-#
-#         self.assertIn("image", res.data)
-#
-#     def test_image_url_is_shown_on_event_list(self):
-#         url = image_upload_url(self.event.id)
-#         with tempfile.NamedTemporaryFile(suffix=".jpg") as ntf:
-#             img = Image.new("RGB", (10, 10))
-#             img.save(ntf, format="JPEG")
-#             ntf.seek(0)
-#             self.client.post(url, {"image": ntf}, format="multipart")
-#         res = self.client.get(EVENT_URL)
-#
-#         self.assertIn("image", res.data[0].keys())
-#
-#     def test_image_url_is_shown_on_event_session_detail(self):
-#         url = image_upload_url(self.event.id)
-#         with tempfile.NamedTemporaryFile(suffix=".jpg") as ntf:
-#             img = Image.new("RGB", (10, 10))
-#             img.save(ntf, format="JPEG")
-#             ntf.seek(0)
-#             self.client.post(url, {"image": ntf}, format="multipart")
-#         res = self.client.get(EVENT_SESSION_URL)
-#
-#         self.assertIn("event_image", res.data[0].keys())
