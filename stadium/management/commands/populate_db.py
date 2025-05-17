@@ -11,6 +11,9 @@ from stadium.models import (
     EventSession,
     SportArena,
     Section,
+)
+
+from reservation.models import (
     Ticket,
     Order,
 )
@@ -23,15 +26,15 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         self.stdout.write("Generating fake data...")
 
-        Ticket.objects.all().delete()
-        Order.objects.all().delete()
-        EventSession.objects.all().delete()
-        Event.objects.all().delete()
-        Genre.objects.all().delete()
-        Team.objects.all().delete()
-        Actor.objects.all().delete()
-        Section.objects.all().delete()
-        SportArena.objects.all().delete()
+        # Ticket.objects.all().delete()
+        # Order.objects.all().delete()
+        # EventSession.objects.all().delete()
+        # Event.objects.all().delete()
+        # Genre.objects.all().delete()
+        # Team.objects.all().delete()
+        # Actor.objects.all().delete()
+        # Section.objects.all().delete()
+        # SportArena.objects.all().delete()
 
         for _ in range(4):
             Genre.objects.create(name=fake.word())

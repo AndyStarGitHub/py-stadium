@@ -6,10 +6,12 @@ from stadium.views import (
     EventViewSet,
     EventSessionViewSet,
     GenreViewSet,
-    OrderViewSet,
     SectionViewSet,
     SportArenaViewSet,
     TeamViewSet,
+)
+from reservation.views import (
+    OrderViewSet,
 )
 
 router = routers.DefaultRouter()

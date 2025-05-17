@@ -10,11 +10,13 @@ from stadium.models import (
     Event,
     EventSession,
     Genre,
-    Order,
     Section,
     SportArena,
     Team,
 )
+
+from reservation.models import Order
+
 from stadium.permissions import IsAdminOrIfAuthenticatedReadOnly
 from stadium.serializers import (
     ActorSerializer,
@@ -24,8 +26,6 @@ from stadium.serializers import (
     EventSessionSerializer,
     EventSessionListSerializer,
     GenreSerializer,
-    OrderSerializer,
-    OrderListSerializer,
     SectionSerializer,
     SectionListSerializer,
     SectionRetrieveSerializer,
@@ -34,6 +34,11 @@ from stadium.serializers import (
     SportArenaRetrieveSerializer,
     TeamSerializer,
     EventSessionRetrieveSerializer,
+)
+
+from reservation.serializers import (
+    OrderSerializer,
+    OrderListSerializer,
 )
 
 
@@ -244,30 +249,3 @@ class TeamViewSet(
     queryset = Team.objects.all()
     serializer_class = TeamSerializer
     permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
-
-
-class OrderSetPagination(PageNumberPagination):
-    page_size = 3
-    page_size_query_param = "page_size"
-    max_page_size = 20
-
-
-class OrderViewSet(viewsets.ModelViewSet):
-    queryset = Order.objects.all()
-    serializer_class = OrderSerializer
-    pagination_class = OrderSetPagination
-
-    def get_queryset(self):
-        queryset = self.queryset.filter(user=self.request.user)
-        if self.action in ("list", "retrieve"):
-            queryset = queryset.prefetch_related("ticket_orders")
-        return queryset
-
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
-
-    def get_serializer_class(self):
-        serializer = self.serializer_class
-        if self.action == "list":
-            serializer = OrderListSerializer
-        return serializer
