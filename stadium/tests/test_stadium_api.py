@@ -8,7 +8,8 @@ from rest_framework import status
 from rest_framework.reverse import reverse
 from rest_framework.test import APIClient
 
-from stadium.models import Event, Genre, Actor, SportArena, EventSession
+from show.models import Event, Genre, Actor, EventSession
+from stadium.models import SportArena
 
 ACTOR_URL = reverse("stadium:actor-list")
 EVENT_URL = reverse("stadium:event-list")
