@@ -27,7 +27,9 @@ class OrderViewSet(viewsets.ModelViewSet):
     pagination_class = OrderSetPagination
 
     def get_queryset(self):
-        queryset = self.queryset.filter(user=self.request.user)
+        queryset = self.queryset
+        if not self.request.user.is_staff:
+            queryset = self.queryset.filter(user=self.request.user)
         if self.action in ("list", "retrieve"):
             queryset = queryset.prefetch_related("ticket_orders")
         return queryset

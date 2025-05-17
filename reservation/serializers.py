@@ -54,7 +54,7 @@ class TicketSeatsSerializer(TicketSerializer):
 
 
 class TicketListSerializer(TicketSerializer):
-    from stadium.serializers import EventSessionListSerializer
+    from show.serializers import EventSessionListSerializer
     event_session = EventSessionListSerializer(many=False, read_only=True)
 
 

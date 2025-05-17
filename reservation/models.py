@@ -1,13 +1,10 @@
-import os
-import uuid
-
 from django.core.exceptions import ValidationError
 from django.db import models
-from django.utils.text import slugify
 
 from django.conf import settings
 
-from stadium.models import EventSession, Section
+from show.models import EventSession
+from stadium.models import Section
 
 
 class Order(models.Model):

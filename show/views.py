@@ -13,15 +13,9 @@ from show.models import (
     Team,
 )
 
-from stadium.models import (
-    Section,
-    SportArena,
-)
-
 from reservation.models import Order
 
 from stadium.permissions import IsAdminOrIfAuthenticatedReadOnly
-
 from show.serializers import (
     ActorSerializer,
     EventSerializer,
@@ -32,20 +26,6 @@ from show.serializers import (
     GenreSerializer,
     TeamSerializer,
     EventSessionRetrieveSerializer,
-)
-
-from stadium.serializers import (
-    SectionSerializer,
-    SectionListSerializer,
-    SectionRetrieveSerializer,
-    SportArenaSerializer,
-    SportArenaListSerializer,
-    SportArenaRetrieveSerializer,
-)
-
-from reservation.serializers import (
-    OrderSerializer,
-    OrderListSerializer,
 )
 
 
@@ -205,44 +185,6 @@ class GenreViewSet(
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
     permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
-
-
-class SectionViewSet(
-    mixins.CreateModelMixin,
-    mixins.ListModelMixin,
-    mixins.RetrieveModelMixin,
-    mixins.UpdateModelMixin,
-    mixins.DestroyModelMixin,
-    GenericViewSet,
-):
-    queryset = Section.objects.all()
-    permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
-
-    def get_serializer_class(self):
-        if self.action == "list":
-            return SectionListSerializer
-        elif self.action == "retrieve":
-            return SectionRetrieveSerializer
-        return SectionSerializer
-
-
-class SportArenaViewSet(
-    mixins.CreateModelMixin,
-    mixins.ListModelMixin,
-    mixins.RetrieveModelMixin,
-    mixins.UpdateModelMixin,
-    mixins.DestroyModelMixin,
-    GenericViewSet,
-):
-    queryset = SportArena.objects.all()
-    permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
-
-    def get_serializer_class(self):
-        if self.action == "list":
-            return SportArenaListSerializer
-        elif self.action == "retrieve":
-            return SportArenaRetrieveSerializer
-        return SportArenaSerializer
 
 
 class TeamViewSet(
