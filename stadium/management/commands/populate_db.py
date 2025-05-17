@@ -3,12 +3,15 @@ from django.core.management.base import BaseCommand
 from faker import Faker
 import random
 
-from stadium.models import (
+from show.models import (
     Genre,
     Team,
     Actor,
     Event,
     EventSession,
+)
+
+from stadium.models import (
     SportArena,
     Section,
 )

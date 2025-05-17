@@ -14,8 +14,8 @@ class TicketSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 {
                     "row": f"row must be in range ["
-                    f"1, {attrs['section'].rows}], "
-                    f"not {attrs['row']} for "
+                    f"1, {attrs["section"].rows}], "
+                    f"not {attrs["row"]} for "
                     f"section {attrs["section"]}"
                 }
             )
@@ -23,8 +23,8 @@ class TicketSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 {
                     "seat": f"seat must be in range "
-                    f"[1, {attrs['section'].seats_in_row}], "
-                    f"not {attrs['seat']} for "
+                    f"[1, {attrs["section"].seats_in_row}], "
+                    f"not {attrs["seat"]} for "
                     f"section {attrs["section"]}"
                 }
             )

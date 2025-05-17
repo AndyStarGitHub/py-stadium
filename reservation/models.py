@@ -59,7 +59,9 @@ class Ticket(models.Model):
         if self.section not in self.event_session.sections.all():
             raise ValidationError(
                 {
-                    "section": f"The section {self.section.name} doesn't belong to the event venue sport arena {self.event_session.sportarena.name}"
+                    "section": f"The section {self.section.name} doesn't "
+                    f"belong to the event venue sport "
+                    f"arena {self.event_session.sportarena.name}"
                 }
             )
 

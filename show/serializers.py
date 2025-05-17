@@ -13,7 +13,7 @@ from stadium.serializers import (
     SportArenaSerializer,
 )
 
-from stadium.models import Section, SportArena
+from stadium.models import SportArena
 
 
 class ActorSerializer(serializers.ModelSerializer):
@@ -230,11 +230,3 @@ class EventSessionRetrieveSerializer(EventSessionSerializer):
             "teams",
             "tickets",
         )
-
-
-
-
-
-
-
-

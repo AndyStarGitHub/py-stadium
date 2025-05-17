@@ -15,4 +15,5 @@ class TicketInline(admin.TabularInline):
 class OrderAdmin(admin.ModelAdmin):
     inlines = (TicketInline,)
 
+
 admin.site.register(Ticket)

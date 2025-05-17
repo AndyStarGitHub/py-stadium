@@ -1,6 +1,5 @@
 from datetime import datetime
 
-from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import mixins, viewsets
 from rest_framework.viewsets import GenericViewSet
 

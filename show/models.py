@@ -1,6 +1,3 @@
-import os
-import uuid
-
 from django.db import models
 
 from stadium.models import Section, SportArena, event_image_file_path
@@ -40,9 +37,6 @@ class Team(models.Model):
 
     class Meta:
         verbose_name_plural = "teams"
-
-
-
 
 
 class Event(models.Model):

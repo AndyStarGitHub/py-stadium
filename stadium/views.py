@@ -18,8 +18,6 @@ from stadium.models import (
     SportArena,
 )
 
-from reservation.models import Order
-
 from stadium.permissions import IsAdminOrIfAuthenticatedReadOnly
 
 from show.serializers import (
@@ -41,11 +39,6 @@ from stadium.serializers import (
     SportArenaSerializer,
     SportArenaListSerializer,
     SportArenaRetrieveSerializer,
-)
-
-from reservation.serializers import (
-    OrderSerializer,
-    OrderListSerializer,
 )
 
 

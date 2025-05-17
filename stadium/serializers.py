@@ -1,20 +1,9 @@
 from rest_framework import serializers
-from django.core.exceptions import ValidationError as DjangoValidationError
-from rest_framework.exceptions import ValidationError
 
 from stadium.models import (
     SportArena,
     Section,
 )
-
-
-
-
-
-
-
-
-
 
 
 class SectionSerializer(serializers.ModelSerializer):

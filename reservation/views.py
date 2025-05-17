@@ -1,14 +1,10 @@
-from datetime import datetime
-
-from drf_spectacular.utils import extend_schema, OpenApiParameter
-from rest_framework import mixins, viewsets
+from rest_framework import viewsets
 from rest_framework.pagination import PageNumberPagination
-from rest_framework.viewsets import GenericViewSet
 
 from reservation.models import (
     Order,
 )
-from stadium.permissions import IsAdminOrIfAuthenticatedReadOnly
+
 from reservation.serializers import (
     OrderSerializer,
     OrderListSerializer,
