@@ -2,7 +2,6 @@ from datetime import datetime
 
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import mixins, viewsets
-from rest_framework.pagination import PageNumberPagination
 from rest_framework.viewsets import GenericViewSet
 
 from show.models import (
@@ -13,7 +12,7 @@ from show.models import (
     Team,
 )
 
-from reservation.models import Order
+from pagination import EventSetPagination, PageNumberPagination
 
 from stadium.permissions import IsAdminOrIfAuthenticatedReadOnly
 from show.serializers import (
@@ -40,12 +39,6 @@ class ActorViewSet(
     queryset = Actor.objects.all()
     serializer_class = ActorSerializer
     permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
-
-
-class EventSetPagination(PageNumberPagination):
-    page_size = 3
-    page_size_query_param = "page_size"
-    max_page_size = 20
 
 
 class EventViewSet(viewsets.ModelViewSet):
@@ -105,12 +98,6 @@ class EventViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         """Get list of events."""
         return super().list(request, *args, **kwargs)
-
-
-class EventSessionSetPagination(PageNumberPagination):
-    page_size = 4
-    page_size_query_param = "page_size"
-    max_page_size = 20
 
 
 class EventSessionViewSet(viewsets.ModelViewSet):
